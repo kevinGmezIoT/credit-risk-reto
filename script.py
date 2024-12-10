@@ -1,7 +1,7 @@
 
 import argparse
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, precision_score
 import sklearn
 import joblib
@@ -17,8 +17,9 @@ if __name__== "__main__":
     print("[INFO] Extracting arguments")
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("--n_estimators", type=int, default=100)
-    parser.add_argument("--random_state", type=int, default=0)
+    parser.add_argument("--kernel", type=str, default="rbf")
+    parser.add_argument("--C", type=float, default=1.0)
+    parser.add_argument("--gamma", type=str, default="scale")
     
     parser.add_argument("--model-dir", type=str, default=os.environ.get("SM_MODEL_DIR"))
     parser.add_argument("--train", type=str, default=os.environ.get("SM_CHANNEL_TRAIN"))
@@ -66,9 +67,9 @@ if __name__== "__main__":
     print(y_test.shape)
     print()
     
-    print("Training RandomForest Model....")
+    print("Training SVM Model....")
     print()
-    model = RandomForestClassifier(n_estimators=args.n_estimators, random_state=args.random_state, verbose=True)
+    model = SVC(kernel=args.kernel, C=args.C, gamma=args.gamma, verbose=True)
     model.fit(X_train, y_train)
     print()
     
